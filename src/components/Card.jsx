@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { addToCart } from '../features/cartSlice';
-import { useSelector } from 'react-redux';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Card = () => {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
-
 
   useEffect(() => {
     async function getProducts() {
@@ -16,22 +16,32 @@ const Card = () => {
         setProducts(response.data);
       } catch (error) {
         console.error(error);
+      } finally {
+        setLoading(false);
       }
     }
     getProducts();
   }, []);
 
-  // Helper function to truncate text
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <ClipLoader color={"#123abc"} loading={loading} size={50} />
+      </div>
+    );
+  }
+
   const truncateText = (text, limit) => {
     if (text.length <= limit) {
       return text;
     }
     return text.slice(0, limit) + '...';
-  };
+  };  
 
   const handleAddToCart = (product) => {
     dispatch(addToCart({
-      name: product.title,
+      id: product._id,
+      title: product.title,
       image: product.image,
       price: product.price,
     }));

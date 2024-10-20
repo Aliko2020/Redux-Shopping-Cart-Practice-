@@ -1,14 +1,15 @@
 import React from 'react';
 import { FaPlus } from "react-icons/fa6";
 import { AiOutlineMinus } from "react-icons/ai";
-import { useSelector } from 'react-redux';
-import { selectCartItems } from '../features/cartSlice'; // Ensure path is correct
+import { useSelector, useDispatch } from 'react-redux';
+import { selectCartItems, incrementQuantity, decrementQuantity, removeFromCart } from '../features/cartSlice'; // Ensure path is correct
 
 const CartItem = () => {
   const cartItems = useSelector(selectCartItems);
+  const dispatch = useDispatch();
 
   // Calculate the total price
-  const totalPrice = cartItems.reduce((total, item) => total + item.price, 0);
+  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
 
   return (
     <div className='flex flex-col bg-white mt-2'>
@@ -23,11 +24,11 @@ const CartItem = () => {
             <span>${item.price}</span>
           </p>
           <div className='flex flex-col justify-center items-center'>
-            <FaPlus />
-            <span>0</span>
-            <AiOutlineMinus />
+            <FaPlus onClick={() => dispatch(incrementQuantity(item))} className='cursor-pointer' />
+            <span>{item.quantity}</span>
+            <AiOutlineMinus onClick={() => dispatch(decrementQuantity(item))} className='cursor-pointer' />
           </div>
-          <button className='bg-red-500 py-2 px-4 text-white rounded-md cursor-pointer'>
+          <button onClick={() => dispatch(removeFromCart(item))} className='bg-red-500 py-2 px-4 text-white rounded-md cursor-pointer'>
             Remove
           </button>
         </div>

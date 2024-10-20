@@ -1,17 +1,21 @@
 import React from 'react';
 import { TiShoppingCart } from "react-icons/ti";
-import { useSelector } from 'react-redux';
-import { selectCartItemsCount } from '../features/cartSlice'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleCart, selectCartItemsCount } from '../features/cartSlice'; 
 
 const Header = () => {
+  const dispatch = useDispatch();
   const itemCount = useSelector(selectCartItemsCount);
-    useSelector((item)=> console.log(item))
+
   return (
-    <nav className='flex justify-between items-center bg-[#352b2b] p-4 px-16 text-white font-semibold'>
+    <nav className='flex justify-between items-center bg-[#352b2b] p-4 px-12 text-white font-semibold'>
       <h1>Redux Shopping Cart</h1>
-      <div className='flex items-center cursor-pointer gap-2'>
+      <div
+        className='flex items-center cursor-pointer gap-2 relative'
+        onClick={() => dispatch(toggleCart())} 
+      >
         <TiShoppingCart size={35} />
-        <span className=''>
+        <span className='font-semibold right-5'>
           {itemCount}
         </span>
       </div>
